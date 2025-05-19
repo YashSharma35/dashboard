@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance ERP - Daily Attendance</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      display: flex;
+    }
+    .sidebar {
+      width: 200px;
+      background-color: #2c3e50;
+      color: white;
+      height: 100vh;
+      padding: 20px 10px;
+      box-sizing: border-box;
+    }
+    .sidebar h2 {
+      text-align: center;
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+    .sidebar ul li {
+      padding: 10px;
+      cursor: pointer;
+    }
+    .sidebar ul li:hover, .sidebar ul li.active {
+      background-color: #34495e;
+    }
+    .main {
+      flex-grow: 1;
+      padding: 20px;
+    }
+    .form-group {
+      margin-bottom: 10px;
+    }
+    .form-group input, .form-group select {
+      padding: 8px;
+      width: 200px;
+      margin-right: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+    .scrollable {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 10px;
+    }
+    .present-toggle {
+      cursor: pointer;
+      padding: 5px 10px;
+      background-color: #2ecc71;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+    .present-toggle.absent {
+      background-color: #e74c3c;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>ERP</h2>
+    <ul>
+      <li class="active">Attendance</li>
+      <li>Reports</li>
+      <li>Setup</li>
+    </ul>
+  </div>
+  <div class="main">
+    <h2>Daily Attendance</h2>
+    <p>Record student attendance for a specific class and subject</p>
+
+    <div class="form-group">
+      <input type="date" id="date">
+      <select id="class-select">
+        <option value="IT 3rd Year">IT 3rd Year</option>
+        <!-- Add more options here -->
+      </select>
+      <select id="subject-select">
+        <option value="CGMM Lab">CGMM Lab</option>
+        <!-- Add more options here -->
+      </select>
+      <button onclick="loadStudents()">Load Students</button>
+    </div>
+
+    <div class="scrollable">
+      <table>
+        <thead>
+          <tr>
+            <th>Enrollment No.</th>
+            <th>Name</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="students-table">
+        </tbody>
+      </table>
+    </div>
+
+    <button onclick="saveAttendance()">Save Attendance</button>
+  </div>
+
+  <script>
+    const students = [
+      { roll: '0827IT221079', name: 'Kratika Jain' },
+      { roll: '0827IT221080', name: 'Kunal Kushwah' },
+      { roll: '0827IT221081', name: 'Kushagra Mandloi' }
+    ];
+
+    function loadStudents() {
+      const tbody = document.getElementById('students-table');
+      tbody.innerHTML = '';
+      students.forEach(student => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${student.roll}</td>
+          <td>${student.name}</td>
+          <td><button class="present-toggle" onclick="toggleStatus(this)">Present</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function toggleStatus(button) {
+      if (button.textContent === 'Present') {
+        button.textContent = 'Absent';
+        button.classList.add('absent');
+      } else {
+        button.textContent = 'Present';
+        button.classList.remove('absent');
+      }
+    }
+
+    function saveAttendance() {
+      const rows = document.querySelectorAll('#students-table tr');
+      const attendance = Array.from(rows).map(row => {
+        const cells = row.querySelectorAll('td');
+        return {
+          roll: cells[0].textContent,
+          name: cells[1].textContent,
+          status: cells[2].querySelector('button').textContent
+        };
+      });
+      console.log('Attendance Data:', attendance);
+      alert('Attendance saved (check console for output).');
+    }
+  </script>
+</body>
+</html>
