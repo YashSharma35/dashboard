@@ -1,0 +1,8 @@
+CREATE TABLE attendance (
+    attendance_id INT AUTO_INCREMENT PRIMARY KEY,
+    lecture_id INT,
+    student_id INT,
+    status ENUM('present', 'absent') NOT NULL,
+    FOREIGN KEY (lecture_id) REFERENCES lectures(lecture_id),
+    FOREIGN KEY (student_id) REFERENCES users(user_id)
+);
